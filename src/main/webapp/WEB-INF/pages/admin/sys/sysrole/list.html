@@ -1,0 +1,61 @@
+<script type="text/javascript">
+    function edit(id) {
+        openTab('编辑角色', '/vm/role/toedit?id=' + id);
+    }
+    function del(id) {
+        $.messager.confirm('确认删除', '确认要删除角色?', function (r) {
+            if (r) {
+                $.getJSON("/vm/role/del.json", {"id": id}, function (data) {
+                    if (data.status == 200) {
+                    } else {
+                        alert("删除失败")
+                    }
+                    $('#dg').datagrid('reload')
+                })
+            }
+        });
+    }
+
+    $(function () {
+
+        $('#dg').datagrid({
+            url: '/vm/role/listwithresources',
+            fitColumns: true,
+            fit: true,
+            columns: [[
+                {field: 'id', title: 'id', width: 20, align: 'right'},
+                {field: 'role', title: '角色名', width: 30, align: 'right'},
+                {field: 'description', title: '描述', width: 40, align: 'right'},
+                {
+                    field: 'resourceList', title: '拥有的资源', width: 60, align: 'right', formatter: function (val, rec) {
+                    var resources = "";
+                    for (i in val) {
+                        if (i < val.length - 1)
+                            resources += val[i].name + ","
+                        else
+                            resources += val[i].name
+                    }
+                    return resources;
+                }
+                },
+                {
+                    field: 'op', title: '操作', width: 80, formatter: function (val, rec, rowIds) {
+                    return "<a href='javascript:void(0)' onclick='edit(" +
+                            rec.id + ")'>修改</a>&nbsp;<a href='javascript:void(0)' onclick='del(" +
+                            rec.id + ")'>删除</a>&nbsp;"
+                }
+                }
+            ]]
+        });
+    })
+</script>
+
+<div class="easyui-layout" fit="true" border="false">
+
+    <div data-options="region:'center'">
+        <table id="dg">
+        </table>
+    </div>
+</div>
+
+

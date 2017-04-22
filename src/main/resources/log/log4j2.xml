@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="warn">
+    <properties>
+        <property name="LOG_HOME">/data/applogs</property>
+    </properties>
+    <appenders>
+        <Console name="console" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="%d{yyyy/MM/dd HH:mm:ss.SSS} %t [%p] %c{1} (%F:%L) %msg%n" />
+        </Console>
+
+        <CatAppender name="catAppender"/>
+
+        <!--XMDFile异步磁盘日志配置示例-->
+        <!--默认按天&按512M文件大小切分日志，默认最多保留30个日志文件-->
+        <!--注意：fileName前会自动增加文件路径，只配置文件名即可-->
+        <!--北京侧配置示例-->
+        <!--<XMDFile name="SERVICE-LOG" fileName="request.log"></XMDFile>-->
+        <!--上海侧配置示例-->
+        <XMDFile name="serviceAppender" fileName="service.log" includeLocation="true" xmdFilePath="${LOG_HOME}"/>
+        <XMDFile name="sqlAppender" fileName="sql.log" includeLocation="true" xmdFilePath="${LOG_HOME}"/>
+        <!--可选配置：ERROR日志、WARN日志单独输出到一个文件-->
+        <XMDFile name="errorAppender" fileName="error.log" includeLocation="true" xmdFilePath="${LOG_HOME}">
+            <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
+        </XMDFile>
+        <XMDFile name="warnAppender" fileName="warn.log" includeLocation="true" xmdFilePath="${LOG_HOME}">
+            <Filters>
+                <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+        </XMDFile>
+
+    </appenders>
+
+    <loggers>
+        <Logger name="java.sql.Connection" level="warn" additivity="false">
+            <AppenderRef ref="sqlAppender"/>
+            <AppenderRef ref="warnAppender" />
+            <AppenderRef ref="errorAppender" />
+            <appenderRef ref="catAppender"/>
+        </Logger>
+        <Logger name="java.sql.PreparedStatement" level="warn" additivity="false">
+            <AppenderRef ref="sqlAppender"/>
+            <AppenderRef ref="warnAppender" />
+            <AppenderRef ref="errorAppender" />
+            <appenderRef ref="catAppender"/>
+        </Logger>
+
+        <Logger name="ConstraintRuleEngine" level="warn" additivity="true">
+            <AppenderRef ref="ruleEngineAppender"/>
+            <appenderRef ref="catAppender"/>
+        </Logger>
+
+
+        <Root level="info">
+            <!--控制台输出推荐只在本地调试时使用，线上将该配置去掉-->
+            <AppenderRef ref="console" />
+            <AppenderRef ref="serviceAppender" />
+            <AppenderRef ref="warnAppender" />
+            <AppenderRef ref="errorAppender" />
+            <appenderRef ref="catAppender"/>
+        </Root>
+    </loggers>
+</configuration>

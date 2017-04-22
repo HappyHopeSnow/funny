@@ -1,0 +1,97 @@
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#add").click(function () {
+            var name = $.trim($("input[name='name']").val());
+            var pid = $.trim($("input[name='pid']").val());
+            var nick = $.trim($("input[name='nick']").val());
+            var mail = $.trim($("input[name='mail']").val());
+            var phone = $.trim($("input[name='phone']").val());
+            var password = $.trim($("input[name='password']").val());
+            var description = $.trim($("input[name='description']").val());
+
+            var addData = {
+                "name": name,
+                "pid": pid,
+                "nick": nick,
+                "mail": mail,
+                "phone": phone,
+                "password": password,
+                "description": description
+            }
+            $.ajax({
+                type: "POST",
+                url: "/admin/user/add",
+                data: addData,
+                success: function (returnData) {
+                    if (returnData.status == 200) {
+                        $.messager.alert("添加成功", "添加成功");
+                        openTab("用户列表", "/admin/user/list");
+                    } else {
+                        $.messager.alert(returnData.message, returnData.message)
+                    }
+                }
+            })
+        })
+    })
+    function goback() {
+        openTab("用户列表", "/admin/user/list");
+    }
+</script>
+
+<div closable="true"  class="easyui-layout" fit="true" border="false">
+    <div data-options="region:'center',split:true" >
+        <!--图片上传-->
+        <form id="form1" action="imgUpload.json" method="post" enctype="multipart/form-data">
+            <input type="file" name="file">
+            <input type="button" value="提交" onclick="uploadImg()">
+        </form>
+
+        <!--表单-->
+        <form id="ff" method="post">
+            <table cellpadding="5">
+                <tr>
+                    <td>姓名:</td>
+                    <td><input class="easyui-textbox" type="text" name="name" data-options="　"></input>
+                    </td>
+                </tr>
+                <tr>
+                    <td>头像:</td>
+                    <td style="text-align:left;">
+                        <img alt="" src="" id="imgUrl" width="100px">
+                        <input type="hidden" name="pid">
+                </tr>
+                <tr>
+                    <td>昵称:</td>
+                    <td><input class="easyui-textbox" type="text" name="nick" data-options="　"></input>
+                    </td>
+                </tr>
+                <tr>
+                    <td>邮箱:</td>
+                    <td><input class="easyui-textbox" type="text" name="mail" data-options="　"></input>
+                    </td>
+                </tr>
+                <tr>
+                    <td>手机号:</td>
+                    <td><input class="easyui-textbox" type="text" name="phone" data-options="　"></input>
+                    </td>
+                </tr>
+                <tr>
+                    <td>密码:</td>
+                    <td><input class="easyui-textbox" type="text" name="password" data-options="　"></input>
+                    </td>
+                </tr>
+                <tr>
+                    <td>描述:</td>
+                    <td><input class="easyui-textbox" type="text" name="description" data-options="　"></input>
+                    </td>
+                </tr>
+            </table>
+        </form>
+
+    </div>
+    <div data-options="region:'south'" style="height:70px;">
+        <a href="javascript:void(0)"  class="easyui-linkbutton" data-options="iconCls:'icon-add'" id="add">保存</a>
+        <a href="javascript:void(0)"  class="easyui-linkbutton" data-options="iconCls:'icon-back'" onclick="goback()">返回</a>
+    </div>
+</div>

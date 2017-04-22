@@ -1,0 +1,96 @@
+<script type="text/javascript">
+    $(function () {
+        $("#updateAplcard").click(function () {
+            var id = $.trim($("input[name='id']").val());
+            var title = $.trim($("input[name='title']").val());
+            var pid = $.trim($("input[name='pid']").val());
+            var description = $.trim($("input[name='description']").val());
+            var typeId = $.trim($("input[name='typeId']").val());
+            var ingredients = $.trim($("input[name='ingredients']").val());
+            var keyword = $.trim($("input[name='keyword']").val());
+
+            var addData = {
+                "id": id,
+                "title": title,
+                "pid": pid,
+                "description": description,
+                "typeId": typeId,
+                "ingredients": ingredients,
+                "keyword": keyword
+            }
+            $.ajax({
+                type: "POST",
+                url: "/admin/recipes/update",
+                data: addData,
+                success: function (returnData) {
+                    if (returnData.status == 200) {
+                        $.messager.alert("更新成功", "更新成功!");
+                        openTab("食谱列表", "/admin/recipes/list");
+                    } else {
+                        $.messager.alert(returnData.message, returnData.message)
+                    }
+                }
+            })
+        })
+    })
+    function goback() {
+        openTab("食谱列表", "/admin/recipes/list");
+    }
+</script>
+
+<div class="easyui-layout" fit="true" border="false">
+    <div data-options="region:'center',split:true" >
+        <!--图片上传-->
+        <form id="form1" action="imgUpload.json" method="post" enctype="multipart/form-data">
+            <input type="file" name="file">
+            <input type="button" value="提交" onclick="uploadImg()">
+        </form>
+        <!--表单-->
+        <form id="ff" method="post">
+            <input id="id" name="id" value="${recipes.id}" type="hidden">
+            <table cellpadding="5">
+                <tr>
+                    <td>标题:</td>
+                    <td><input class="easyui-textbox" type="text" name="title" value="${recipes.title}" data-options="　"></input>
+                    </td>
+                </tr>
+                <tr>
+                    <td>pid:</td>
+                    <td>
+                        <input type="hidden" name="pid">
+                        <img id="imgUrl" src="http://weishu-funny.oss-cn-shanghai.aliyuncs.com/img/${recipes.pid}?x-oss-process=image/resize,m_lfit,h_100,w_100" width="100px"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>描述:</td>
+                    <td><input class="easyui-textbox" type="text" name="description" value="${recipes.description}" data-options="　"></input>
+                    </td>
+                </tr>
+                <tr>
+                    <td>分类ID:</td>
+                    <td><input class="easyui-textbox" type="text" name="typeId" value="${recipes.typeId}" data-options="　"></input>
+                    </td>
+                </tr>
+                <tr>
+                    <td>食材:</td>
+                    <td><input class="easyui-textbox" type="text" name="ingredients" value="${recipes.ingredients}" data-options="　"></input>
+                    </td>
+                </tr>
+                <tr>
+                    <td>关键字:</td>
+                    <td><input class="easyui-textbox" type="text" name="keyword" value="${recipes.keyword}" data-options="　"></input>
+                    </td>
+                </tr>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <div data-options="region:'south'" style="height:70px;">
+        <a href="javascript:void(0)"  class="easyui-linkbutton" data-options="iconCls:'icon-add'" id="updateAplcard">更新</a>
+        <a href="javascript:void(0)"  class="easyui-linkbutton" data-options="iconCls:'icon-back'" onclick="goback()">返回</a>
+    </div>
+</div>
+
+
+
+

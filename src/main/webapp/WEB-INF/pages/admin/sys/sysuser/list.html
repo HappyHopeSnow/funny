@@ -1,0 +1,64 @@
+<script type="text/javascript">
+    function edit(id) {
+        openTab('编辑用户', '/vm/user/toedit?id=' + id);
+    }
+    function passwd(id) {
+        openTab('修改密码', '/vm/user/topassword?id=' + id);
+    }
+    function del(id) {
+        $.messager.confirm('确认删除', '确认要删除用户?', function (r) {
+            if (r) {
+                $.getJSON("/vm/user/del.json", {"id": id}, function (data) {
+                    if (data.status == 200) {
+                    } else {
+                        alert("删除失败")
+                    }
+                    $('#dg').datagrid('reload')
+                })
+            }
+        });
+    }
+
+    $(function () {
+
+        $('#dg').datagrid({
+            url: '/vm/user/list',
+            fitColumns: true,
+            fit: true,
+            columns: [[
+                {field: 'id', title: 'id', width: 20, align: 'right'},
+                {field: 'username', title: '用户名', width: 60, align: 'right'},
+                {
+                    field: 'roles', title: '拥有角色', width: 60, align: 'right', formatter: function (val, rec, rowIds) {
+                    var roles = "";
+                    for (i in val) {
+                        if(i < val.length - 1)
+                        roles += val[i].role + ","
+                        else
+                        roles += val[i].role
+                    }
+                    return roles;
+                }
+                },
+                {
+                    field: 'op', title: '操作', width: 80, formatter: function (val, rec, rowIds) {
+                    return "<a href='javascript:void(0)' onclick='edit(" +
+                            rec.id + ")'>修改</a>&nbsp;<a href='javascript:void(0)' onclick='del(" +
+                            rec.id + ")'>删除</a>&nbsp;<a href='javascript:void(0)' onclick='passwd(" +
+                            rec.id + ")'>修改密码</a>&nbsp;"
+                }
+                }
+            ]]
+        });
+    })
+</script>
+
+<div class="easyui-layout" fit="true" border="false">
+
+    <div data-options="region:'center'">
+        <table id="dg">
+        </table>
+    </div>
+</div>
+
+

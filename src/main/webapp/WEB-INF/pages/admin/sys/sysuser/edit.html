@@ -1,0 +1,70 @@
+<div class="easyui-layout" fit="true" border="false">
+
+    <div data-options="region:'center'">
+        <form id="ff" method="post">
+            <table cellpadding="5">
+                <!-- #set(SysUser user)-->
+                <tr>
+                    <input name="id" type="hidden" value="${user.id}"/>
+                    <td>名称:</td>
+                    <td><input class="easyui-textbox" type="text" name="username" value="${user.username}"
+                               data-options="required:true"></td>
+                </tr>
+                <tr>
+                    <td>角色:</td>
+                    <td>
+                        <input class="easyui-combobox" id="roleId" name="roleId" style="width: 300px">
+                        </input>
+                    </td>
+                    <input type="hidden" id="roleIds" name="roleIds"/>
+                </tr>
+            </table>
+        </form>
+        <div style="text-align:center;padding:5px">
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()">提交</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">清除</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="back()">返回</a>
+        </div>
+    </div>
+</div>
+<script>
+
+    $(function () {
+        $('#roleId').combobox({
+            url: '/vm/role/list',
+            valueField: 'id',
+            textField: 'role',
+            multiple: true,
+            required: true,
+            onSelect: function (rec) {
+                var roleIds = $('#roleId').combobox('getValues');
+                $("#roleIds").val(roleIds);
+            },
+            onUnselect: function (rec) {
+                var roleIds = $('#roleId').combobox('getValues');
+                $("#roleIds").val(roleIds);
+            },
+            onLoadSuccess: function () {
+                var roleIds = $('#roleId').combobox('setValues', '${user.roleIds}'.split(','));
+            }
+        });
+    })
+
+    function submitForm() {
+        $('#ff').form('submit', {
+            url: "/vm/user/add",
+            success: function (data) {
+                if (data.status = 200) {
+                    openTab('用户列表', "/vm/user/tolist");
+                }
+            }
+        });
+    }
+    function clearForm() {
+        $('#ff').form('clear');
+    }
+    function back() {
+        openTab('用户列表', "/vm/user/tolist");
+    }
+</script>
+

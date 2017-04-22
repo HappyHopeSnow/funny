@@ -1,0 +1,97 @@
+<script>
+    //必需是整数
+    function isInt(str) {
+        var reg = /^(-|\+)?\d+$/;
+        return reg.test(str);
+    }
+    requirejs(['module/ImageUploader'], function (ImageUploader) {
+        ImageUploader($(".upload-file").get(0), "http://upload.starft.cn/save.json", function (data) {
+            console.log("success:asdf: ", data);
+            $("#img").attr("src", data.url+"@100h_100w");
+            $("input[name=pid]").val(data.key);
+        }, function (e) {
+            console.log("error:", e);
+        });
+    });
+</script>
+<script type="text/javascript">
+    $(function () {
+        $("#updateAplcard").click(function () {
+            var id = $.trim($("input[name='id']").val());
+            var value = $.trim($("input[name='value']").val());
+            var type = $.trim($("input[name='type']").val());
+            var pid = $.trim($("input[name='pid']").val());
+
+            var addData = {
+                "id": id,
+                "value": value,
+                "type": type,
+                "pid": pid
+            }
+            $.ajax({
+                type: "POST",
+                url: "/admin/carousel/update",
+                data: addData,
+                success: function (returnData) {
+                    if (returnData.status == 200) {
+                        $.messager.alert("更新成功", "更新成功!");
+                        openTab("轮播图列表", "/admin/carousel/list");
+                    } else {
+                        $.messager.alert(returnData.message, returnData.message)
+                    }
+                }
+            })
+        })
+    })
+    function goback() {
+        openTab("轮播图列表", "/admin/carousel/list");
+    }
+</script>
+
+<div class="easyui-layout" fit="true" border="false">
+    <div data-options="region:'center',split:true" >
+        <!--图片上传-->
+        <form id="form1" action="imgUpload.json" method="post" enctype="multipart/form-data">
+            <input type="file" name="file">
+            <input type="button" value="提交" onclick="uploadImg()">
+        </form>
+        <!--表单-->
+        <form id="ff" method="post">
+            <input id="id" name="id" value="${carousel.id}" type="hidden">
+            <table cellpadding="5">
+                <tr>
+                    <div class="uploadPicture">
+                        <td style="text-align:right;">图片地址： </td>
+                        <td>
+                            <input type="hidden" name="pid">
+                            <img id="imgUrl" src="http://weishu-funny.oss-cn-shanghai.aliyuncs.com/img/${carousel.pid}?x-oss-process=image/resize,m_lfit,h_100,w_100" width="100px"/>
+                        </td>
+                    </div>
+                </tr>
+
+                <tr>
+                    <td>类型:</td>
+                    <td>
+                        <select id="type_aplcard" class="easyui-combobox" name="type" style="width:200px;">
+                            <option value="0">URL</option>
+                            <option value="1">食谱ID</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>对应的值:</td>
+                    <td><input class="easyui-textbox" type="text" id="value" name="value" value="${carousel.value}"  data-options="　"></input>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <div data-options="region:'south'" style="height:70px;">
+        <a href="javascript:void(0)"  class="easyui-linkbutton" data-options="iconCls:'icon-add'" id="updateAplcard">更新</a>
+        <a href="javascript:void(0)"  class="easyui-linkbutton" data-options="iconCls:'icon-back'" onclick="goback()">返回</a>
+    </div>
+</div>
+
+
+
+

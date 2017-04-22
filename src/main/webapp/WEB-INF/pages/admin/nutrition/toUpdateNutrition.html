@@ -1,0 +1,90 @@
+<script type="text/javascript">
+    $(function () {
+        var foodId = $foodId;
+        var foodName = decodeURI("$foodName");
+        $("#foodName").text(foodName);
+        $("#updateAplcard").click(function () {
+            var id = $.trim($("input[name='id']").val());
+            var name = $.trim($("input[name='name']").val());
+            var logo = $.trim($("input[name='pid']").val());
+            var value = $.trim($("input[name='value']").val());
+            var description = $.trim($("input[name='description']").val());
+
+            var addData = {
+                "id": id,
+                "name": name,
+                "logo": logo,
+                "foodId": foodId,
+                "value": value,
+                "description": description
+            }
+            $.ajax({
+                type: "POST",
+                url: "/admin/nutrition/update",
+                data: addData,
+                success: function (returnData) {
+                    if (returnData.status == 200) {
+                        $.messager.alert("更新成功", "更新成功!");
+                        openTab("["+ foodName + "]营养列表", "/admin/nutrition/list?foodId=" + foodId + "&foodName=" + encodeURI(encodeURI(foodName)));
+                    } else {
+                        $.messager.alert(returnData.message, returnData.message)
+                    }
+                }
+            })
+        })
+    })
+    function goback() {
+        openTab("["+ foodName + "]营养列表", "/admin/nutrition/list?foodId=" + foodId + "&foodName=" + encodeURI(encodeURI(foodName)));
+    }
+</script>
+
+<div class="easyui-layout" fit="true" border="false">
+    <div data-options="region:'center',split:true" >
+        <!--图片上传-->
+        <form id="form1" action="imgUpload.json" method="post" enctype="multipart/form-data">
+            <input type="file" name="file">
+            <input type="button" value="提交" onclick="uploadImg()">
+        </form>
+        <!--表单-->
+        <form id="ff" method="post">
+            <input id="id" name="id" value="${nutrition.id}" type="hidden">
+            <table cellpadding="5">
+                <tr>
+                    <td>名称:</td>
+                    <td><input class="easyui-textbox" type="text" name="name" value="${nutrition.name}" data-options="　"></input>
+                    </td>
+                </tr>
+                <tr>
+                    <td>头像:</td>
+                    <td>
+                        <input type="hidden" name="pid">
+                        <img id="imgUrl" src="http://weishu-funny.oss-cn-shanghai.aliyuncs.com/img/${nutrition.logo}?x-oss-process=image/resize,m_lfit,h_100,w_100" width="100px"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>食品名称:</td>
+                    <td id="foodName"></input>
+                    </td>
+                </tr>
+                <tr>
+                    <td>对应值:</td>
+                    <td><input class="easyui-textbox" type="text" name="value" value="${nutrition.value}" data-options="　"></input>
+                    </td>
+                </tr>
+                <tr>
+                    <td>描述:</td>
+                    <td><input class="easyui-textbox" type="text" name="description" value="${nutrition.description}" data-options="　"></input>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <div data-options="region:'south'" style="height:70px;">
+        <a href="javascript:void(0)"  class="easyui-linkbutton" data-options="iconCls:'icon-add'" id="updateAplcard">更新</a>
+        <a href="javascript:void(0)"  class="easyui-linkbutton" data-options="iconCls:'icon-back'" onclick="goback()">返回</a>
+    </div>
+</div>
+
+
+
+

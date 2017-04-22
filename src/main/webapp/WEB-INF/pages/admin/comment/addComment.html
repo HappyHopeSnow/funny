@@ -1,0 +1,47 @@
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#add").click(function () {
+            var name = $.trim($("input[name='name']").val());
+
+            var addData = {
+                "name": name
+            }
+            $.ajax({
+                type: "POST",
+                url: "/admin/user/add",
+                data: addData,
+                success: function (returnData) {
+                    if (returnData.status == 200) {
+                        $.messager.alert("添加成功", "添加成功");
+                        openTab("用户列表", "/admin/user/list");
+                    } else {
+                        $.messager.alert(returnData.message, returnData.message)
+                    }
+                }
+            })
+        })
+    })
+    function goback() {
+        openTab("用户列表", "/admin/user/list");
+    }
+</script>
+
+<div closable="true"  class="easyui-layout" fit="true" border="false">
+    <div data-options="region:'center',split:true" >
+        <form id="ff" method="post">
+            <table cellpadding="5">
+                <tr>
+                    <td>姓名:</td>
+                    <td><input class="easyui-textbox" type="text" name="name" data-options="　"></input>
+                    </td>
+                </tr>
+            </table>
+        </form>
+
+    </div>
+    <div data-options="region:'south'" style="height:70px;">
+        <a href="javascript:void(0)"  class="easyui-linkbutton" data-options="iconCls:'icon-add'" id="add">保存</a>
+        <a href="javascript:void(0)"  class="easyui-linkbutton" data-options="iconCls:'icon-back'" onclick="goback()">返回</a>
+    </div>
+</div>

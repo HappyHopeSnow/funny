@@ -1,0 +1,51 @@
+<script type="text/javascript">
+    $(function () {
+        $("#updateAplcard").click(function () {
+            var id = $.trim($("input[name='id']").val());
+            var name = $.trim($("input[name='name']").val());
+
+            var addData = {
+                "id": id,
+                "name": name
+            }
+            $.ajax({
+                type: "POST",
+                url: "/admin/user/update",
+                data: addData,
+                success: function (returnData) {
+                    if (returnData.status == 200) {
+                        $.messager.alert("更新成功", "更新成功!");
+                        openTab("用户列表", "/admin/user/list");
+                    } else {
+                        $.messager.alert(returnData.message, returnData.message)
+                    }
+                }
+            })
+        })
+    })
+    function goback() {
+        openTab("用户列表", "/admin/user/list");
+    }
+</script>
+
+<div class="easyui-layout" fit="true" border="false">
+    <div data-options="region:'center',split:true" >
+        <form id="ff" method="post">
+            <input id="id" name="id" value="${user.id}" type="hidden">
+            <table cellpadding="5">
+                    <td>姓名:</td>
+                    <td><input class="easyui-textbox" type="text" id="name" name="name" value="${user.name}"  data-options="　"></input>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <div data-options="region:'south'" style="height:70px;">
+        <a href="javascript:void(0)"  class="easyui-linkbutton" data-options="iconCls:'icon-add'" id="updateAplcard">更新</a>
+        <a href="javascript:void(0)"  class="easyui-linkbutton" data-options="iconCls:'icon-back'" onclick="goback()">返回</a>
+    </div>
+</div>
+
+
+
+

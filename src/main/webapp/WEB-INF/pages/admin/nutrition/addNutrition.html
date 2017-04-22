@@ -1,0 +1,85 @@
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        var foodId = $foodId;
+        var foodName = decodeURI("$foodName");
+        $("#foodName").text(foodName);
+        $("#add").click(function () {
+            var name = $.trim($("input[name='name']").val());
+            var logo = $.trim($("input[name='pid']").val());
+            var value = $.trim($("input[name='value']").val());
+            var description = $.trim($("input[name='description']").val());
+
+            var addData = {
+                "name": name,
+                "logo": logo,
+                "foodId": foodId,
+                "value": value,
+                "description": description
+            }
+            $.ajax({
+                type: "POST",
+                url: "/admin/nutrition/add",
+                data: addData,
+                success: function (returnData) {
+                    if (returnData.status == 200) {
+                        $.messager.alert("添加成功", "添加成功");
+                        openTab("["+ foodName + "]营养列表", "/admin/nutrition/list?foodId=" + foodId + "&foodName=" + encodeURI(encodeURI(foodName)));
+                    } else {
+                        $.messager.alert(returnData.message, returnData.message)
+                    }
+                }
+            })
+        })
+    })
+    function goback() {
+        openTab("["+ foodName + "]营养列表", "/admin/nutrition/list?foodId=" + foodId + "&foodName=" + encodeURI(encodeURI(foodName)));
+    }
+</script>
+
+<div closable="true"  class="easyui-layout" fit="true" border="false">
+    <div data-options="region:'center',split:true" >
+        <!--图片上传-->
+        <form id="form1" action="imgUpload.json" method="post" enctype="multipart/form-data">
+            <input type="file" name="file">
+            <input type="button" value="提交" onclick="uploadImg()">
+        </form>
+
+        <!--表单-->
+        <form id="ff" method="post">
+            <table cellpadding="5">
+                <tr>
+                    <td>名称:</td>
+                    <td><input class="easyui-textbox" type="text" name="name" data-options="　"></input>
+                    </td>
+                </tr>
+                <tr>
+                    <td>头像:</td>
+                    <td style="text-align:left;">
+                        <img alt="" src="" id="imgUrl" width="100px">
+                        <input type="hidden" name="pid">
+                </tr>
+                <tr>
+                    <td>食品名称:</td>
+                    <td id="foodName"></input>
+                    </td>
+                </tr>
+                <tr>
+                    <td>对应值:</td>
+                    <td><input class="easyui-textbox" type="text" name="value" data-options="　"></input>
+                    </td>
+                </tr>
+                <tr>
+                    <td>描述:</td>
+                    <td><input class="easyui-textbox" type="text" name="description" data-options="　"></input>
+                    </td>
+                </tr>
+            </table>
+        </form>
+
+    </div>
+    <div data-options="region:'south'" style="height:70px;">
+        <a href="javascript:void(0)"  class="easyui-linkbutton" data-options="iconCls:'icon-add'" id="add">保存</a>
+        <a href="javascript:void(0)"  class="easyui-linkbutton" data-options="iconCls:'icon-back'" onclick="goback()">返回</a>
+    </div>
+</div>

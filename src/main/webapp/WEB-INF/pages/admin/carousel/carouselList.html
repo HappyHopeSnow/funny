@@ -1,0 +1,224 @@
+<script type="text/javascript">
+
+    var dataJson
+
+    function clear() {
+        $('#id').textbox('setValue');
+        $('#status').textbox('setValue');
+        $('#status').textbox('setText', '--请选择--');
+    }
+
+    /**
+     * 展示帮助dialog
+     */
+    function viewHelp() {
+        $('#helpd').window('open');
+    }
+    /**
+     * 搜索
+     */
+
+    function search() {
+        $('#dg').datagrid('load', {
+            id: $('#id').val(),
+            status: $('input[name=status]').val()
+        });
+    }
+    /**
+     * 轮播图
+     * @param id
+     */
+    function confirmDel(id) {
+        $.messager.confirm('确认删除', '确认删除这个轮播图?', function (r) {
+            if (r) {
+                $.getJSON("/admin/carousel/del", {"id": id}, function (data) {
+                    if (data.status == 200) {
+                        alert("删除成功")
+                    } else {
+                        alert("删除失败")
+                    }
+                    $('#dg').datagrid('reload')
+                })
+            }
+        });
+    }
+
+
+    /**
+     * 轮播图
+     * @param id
+     */
+    function confirmRecovery(id) {
+        $.messager.confirm('确认恢复', '确认恢复这个轮播图?', function (r) {
+            if (r) {
+                $.getJSON("/admin/carousel/recovery", {"id": id}, function (data) {
+                    if (data.status == 200) {
+                        alert("恢复成功")
+                    } else {
+                        alert("恢复失败")
+                    }
+                    $('#dg').datagrid('reload')
+                })
+            }
+        });
+    }
+
+    function confirmEdit(id) {
+        openTab("编辑轮播图", "/admin/carousel/toupdate?id=" + id);
+    }
+
+    function formateDate(value, row, index) {
+        var datetime = new Date();
+        datetime.setTime(value);
+        var year = datetime.getFullYear();
+        var month = datetime.getMonth() + 1 < 10 ? "0" + (datetime.getMonth() + 1) : datetime.getMonth() + 1;
+        var date = datetime.getDate() < 10 ? "0" + datetime.getDate() : datetime.getDate();
+        var hour = datetime.getHours() < 10 ? "0" + datetime.getHours() : datetime.getHours();
+        var minute = datetime.getMinutes() < 10 ? "0" + datetime.getMinutes() : datetime.getMinutes();
+        var second = datetime.getSeconds() < 10 ? "0" + datetime.getSeconds() : datetime.getSeconds();
+        return year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second;
+    }
+    $(function () {
+        $.getJSON("/admin/carousel/getlist", null, function (data) {
+            dataJson = data;
+        })
+
+        var editRow = undefined; //定义全局变量：当前编辑的行
+        var pager = $('#dg').datagrid({
+            rownumbers: false,
+            singleSelect: true,
+            pagination: true,
+            url: "/admin/carousel/getlist.json",
+            method: "get",
+            fitColumns: true,
+            fit: true,
+            striped: true,
+            checkOnSelect: false,
+            selectOnCheck: false,
+            columns: [[
+                {
+                    field: 'check1', title: '<input id=\"listcheckbox\" type=\"checkbox\"  >', checkbox: true
+                },
+                {field: 'id', title: 'id', width: 10, align: 'center'},
+                {
+                    field: 'pid', title: '图片', width: 30, align: 'center', formatter: function (val, rec, idx) {
+                    return "<img src='http://weishu-funny.oss-cn-shanghai.aliyuncs.com/img/" + val + "?x-oss-process=image/resize,m_lfit,h_100,w_100'>";
+                }
+                },
+                {
+                    field: 'type',
+                    title: '类型',
+                    width: 30,
+                    align: 'center',
+                    formatter: function (value, rec, rowIndex) {
+                        if (value == 0)
+                            return "<div style='color: blueviolet; font-weight: bold'>URL</div>"
+                        else if (value == 1) {
+                            return "<div style='color: blueviolet; font-weight: bold'>食谱ID</div>"
+                        } else {
+                            return "<div style='color: blueviolet; font-weight: bold'>未知</div>"
+                        }
+                    }},
+                {
+                    field: 'value',
+                    title: '值',
+                    width: 10,
+                    align: 'center',
+                    editor: {type: 'validatebox', options: {required: true}}
+                },
+                {
+                    field: 'isDelete',
+                    title: '是否删除',
+                    width: 10,
+                    align: 'center',
+                    formatter: function (value, rec, rowIndex) {
+                        if (value == 0)
+                            return "<div style='color: blueviolet; font-weight: bold'>未删除</div>"
+                        else if (value == 1) {
+                            return "<div style='color: green; font-weight: bold'>已删除</div>"
+                        } else {
+                            return "<div style='color: red; font-weight: bold'>未知</div>"
+                        }
+                    }
+                },
+                {
+                    field: 'createTime',
+                    title: '创建时间',
+                    width: 30,
+                    align: 'center',
+                    formatter: formateDate
+                },
+                {
+                    field: 'updateTime',
+                    title: '更新时间',
+                    width: 30,
+                    align: 'center',
+                    formatter: formateDate
+                },
+                {
+                    field: 'action',
+                    title: '操作',
+                    width: 50,
+                    align: 'center',
+                    formatter: function (value, rec, rowIndex) {
+                        if (rec.isDelete == 0) {
+                            return "<a href='javascript:void(0)' onclick='confirmEdit(" + rec.id + ")'>编辑</a>&nbsp;<a href='javascript:void(0)' onclick='confirmDel(" + rec.id + ")'>删除</a>&nbsp;"
+                        } else if (rec.isDelete == 1) {
+                            return "<a href='javascript:void(0)' onclick='confirmRecovery(" + rec.id + ")'>恢复</a>&nbsp;"
+                        }
+                    }
+                }
+            ]],
+            onDblClickRow: function (rowIndex, rowData) {
+                //双击开启编辑行
+                if (editRow != undefined) {
+                    pager.datagrid("endEdit", editRow);
+                }
+                if (editRow == undefined) {
+                    pager.datagrid("beginEdit", rowIndex);
+                    editRow = rowIndex;
+                    alert("ff" + rowIndex);
+                }
+            }
+            //
+
+        }).datagrid('getPager');	// get the pager of datagrid
+        pager.pagination({
+            buttons: [{
+                iconCls: 'icon-search',
+                handler: function () {
+                    var queryParams = $("#dg").datagrid('options').queryParams;
+                    queryParams.name = "hehe";
+                    $('#dg').datagrid('options').queryParams = queryParams;
+                    $('#dg').datagrid('reload');
+                }
+            }, {
+                iconCls: 'icon-add',
+                handler: function () {
+                    openTab("添加轮播图", "/admin/carousel/toadd");
+                }
+            }, {
+                iconCls: 'icon-save',
+                handler: function () {
+                    subSort();
+                }
+
+            }]
+        });
+    })
+    function updateActions(index) {
+        $('#dg').datagrid('updateRow', {
+            index: index,
+            row: {}
+        });
+    }
+</script>
+<div class="easyui-layout" fit="true" border="false">
+    <div data-options="region:'center'">
+        <table id="dg"></table>
+    </div>
+</div>
+
+
+
+

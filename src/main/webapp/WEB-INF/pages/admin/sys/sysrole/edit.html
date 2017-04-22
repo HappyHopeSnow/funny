@@ -1,0 +1,70 @@
+<div class="easyui-layout" fit="true" border="false">
+
+    <div data-options="region:'center'">
+        <form id="ff" method="post">
+            <!-- #set(SysRole role)-->
+            <table cellpadding="5">
+                <input type="hidden" value="${role.id}" name="id"/>
+                <tr>
+                    <td>角色名:</td>
+                    <td><input class="easyui-textbox" value="${role.role}" type="text" name="role" data-options="required:true"></td>
+                </tr>
+                <tr>
+                    <td>角色描述:</td>
+                    <td><input class="easyui-textbox" value="${role.description}" type="text" name="description" data-options="required:true"></td>
+                </tr>
+                <tr>
+                    <td>角色:</td>
+                    <td>
+                        <input id="resourceId" name="resourceId" style="width: 300px">
+                        </input>
+                    </td>
+                    <input type="hidden" id="resourceIds" name="resourceIds"/>
+                </tr>
+            </table>
+        </form>
+        <div style="text-align:center;padding:5px">
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()">提交</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">清除</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="back()">返回</a>
+        </div>
+    </div>
+</div>
+<script>
+
+
+    var loadData =
+    $(function () {
+        $('#resourceId').combotree({
+            url:"/vm/resource/listtree",
+            required:true,
+            multiple:true,
+            onLoadSuccess:function(node, data) {
+                $('#resourceId').combotree('setValues', '${role.resourceIds}'.split(','));
+            }
+        });
+    })
+
+    function submitForm() {
+        $('#ff').form('submit', {
+            url: "/vm/role/edit",
+            onSubmit: function(){
+                var resourceId = $('#resourceId').combotree('getValues');
+                $("#resourceIds").val(resourceId);
+                return true;
+            },
+            success: function (data) {
+                if (data.status = 200) {
+                    openTab('用户列表', "/vm/role/tolist");
+                }
+            }
+        });
+    }
+    function clearForm() {
+        $('#ff').form('clear');
+    }
+    function back() {
+        openTab('用户列表', "/vm/role/tolist");
+    }
+</script>
+

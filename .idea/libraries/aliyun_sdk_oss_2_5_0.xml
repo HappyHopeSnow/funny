@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="aliyun-sdk-oss-2.5.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/Downloads/aliyun_java_sdk_20170222/aliyun-sdk-oss-2.5.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

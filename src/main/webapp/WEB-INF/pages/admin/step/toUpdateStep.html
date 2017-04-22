@@ -1,0 +1,75 @@
+<script type="text/javascript">
+    $(function () {
+        var recipesId = $recipesId;
+        var recipesName = decodeURI("$recipesName");
+        $("#recipesName").text(recipesName);
+        $("#updateAplcard").click(function () {
+            var id = $.trim($("input[name='id']").val());
+            var title = $.trim($("input[name='title']").val());
+            var showIndex = $.trim($("input[name='showIndex']").val());
+            var description = $.trim($("input[name='description']").val());
+
+            var addData = {
+                "id": id,
+                "title": title,
+                "showIndex": showIndex,
+                "recipesId": recipesId,
+                "description": description
+            }
+            $.ajax({
+                type: "POST",
+                url: "/admin/step/update",
+                data: addData,
+                success: function (returnData) {
+                    if (returnData.status == 200) {
+                        $.messager.alert("更新成功", "更新成功!");
+                        openTab("["+ recipesName + "]步骤列表", "/admin/step/list?recipesId=" + recipesId + "&recipesName=" + encodeURI(encodeURI(recipesName)));
+                    } else {
+                        $.messager.alert(returnData.message, returnData.message)
+                    }
+                }
+            })
+        })
+    })
+    function goback() {
+        openTab("["+ recipesName + "]步骤列表", "/admin/step/list?recipesId=" + recipesId + "&recipesName=" + encodeURI(encodeURI(recipesName)));
+    }
+</script>
+
+<div class="easyui-layout" fit="true" border="false">
+    <div data-options="region:'center',split:true" >
+        <form id="ff" method="post">
+            <input id="id" name="id" value="${step.id}" type="hidden">
+            <table cellpadding="5">
+                <tr>
+                    <td>标题:</td>
+                    <td><input class="easyui-textbox" type="text" name="title" value="${step.title}" data-options="　"></input>
+                    </td>
+                </tr>
+                <tr>
+                    <td>展示顺序:</td>
+                    <td><input class="easyui-textbox" type="text" name="showIndex" value="${step.showIndex}" data-options="　"></input>
+                    </td>
+                </tr>
+                <tr>
+                    <td>食谱名称:</td>
+                    <td id="recipesName"></input>
+                    </td>
+                </tr>
+                <tr>
+                    <td>描述:</td>
+                    <td><input class="easyui-textbox" type="text" name="description" value="${step.description}" data-options="　"></input>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <div data-options="region:'south'" style="height:70px;">
+        <a href="javascript:void(0)"  class="easyui-linkbutton" data-options="iconCls:'icon-add'" id="updateAplcard">更新</a>
+        <a href="javascript:void(0)"  class="easyui-linkbutton" data-options="iconCls:'icon-back'" onclick="goback()">返回</a>
+    </div>
+</div>
+
+
+
+

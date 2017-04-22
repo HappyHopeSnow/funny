@@ -1,0 +1,69 @@
+<script type="text/javascript">
+    function add(id) {
+        openTab('新增节点', '/vm/resource/toadd?parentid=' + id);
+    }
+    function edit(id) {
+        openTab('编辑节点', '/vm/resource/toedit?id=' + id);
+    }
+    function del(id) {
+        $.messager.confirm('确认删除', '删除节点, 将同时删除下面的所有子节点', function (r) {
+            if (r) {
+                $.getJSON("/vm/resource/del.json", {"id": id}, function (data) {
+                    if (data.status == 200) {
+                    } else {
+                        alert("删除失败")
+                    }
+                    $('#dg').treegrid('reload')
+                })
+            }
+        });
+    }
+
+    $(function () {
+
+        $('#dg').treegrid({
+            url: '/vm/resource/list.json',
+            idField: 'id',
+            treeField: 'name',
+            fitColumns: true,
+            fit: true,
+            columns: [[
+                //                {field:'id',title:'id',width:60,align:'right'},
+                {field: 'name', title: '名称', width: 100},
+                {field: 'type', title: '类型', width: 80, align: 'right'},
+                {field: 'url', title: 'url', width: 160},
+                {field: 'permission', title: '权限', width: 120},
+                {
+                    field: 'abc', title: '操作', width: 180, formatter: function (val, rec, rowIds) {
+                    var href1 = "<a href='javascript:void(0)' onclick='add(" +
+                            rec.id + ")'>增加子节点</a>  " +
+                            "<a href='javascript:void(0)' onclick='edit(" +
+                            rec.id + ")'>编辑</a>&nbsp;  " +
+                            "<a href='javascript:void(0)' onclick='del(" +
+                            rec.id + ")'>删除</a> &nbsp; "
+                    var href2 =
+                            "<a href='javascript:void(0)' onclick='edit(" +
+                            rec.id + ")'>编辑</a>&nbsp;  " +
+                            "<a href='javascript:void(0)' onclick='del(" +
+                            rec.id + ")'>删除</a>  &nbsp;"
+                    if (rec.type == 'menu') {
+                        return href1
+                    } else {
+                        return href2
+                    }
+                }
+                }
+            ]]
+        });
+    })
+</script>
+
+<div class="easyui-layout" fit="true" border="false">
+
+    <div data-options="region:'center'">
+        <table id="dg">
+        </table>
+    </div>
+</div>
+
+

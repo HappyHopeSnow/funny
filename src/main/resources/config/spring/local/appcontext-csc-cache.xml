@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+
+    <!--<bean id="cscRedisClient" class="com.dianping.squirrel.client.impl.redis.spring.RedisClientBeanFactory">-->
+        <!--&lt;!&ndash; 集群名称,必填 &ndash;&gt;-->
+        <!--<property name="clusterName" value="redis-csc"></property>-->
+        <!--&lt;!&ndash;读取超时时间,缓存业务建议改成100，存储业务建议改成1000，默认值为1000。选填&ndash;&gt;-->
+        <!--<property name="readTimeout" value="1000"></property>-->
+        <!--&lt;!&ndash;路由策略,默认值是master-only表示只从主节点读取。slave-only表示只读从节点,master-slave表示主从都可以读。选填&ndash;&gt;-->
+        <!--<property name="routerType" value="master-slave"></property>-->
+        <!--&lt;!&ndash;连接redis节点的连接池配置，选填&ndash;&gt;-->
+        <!--<property name="poolMaxIdle" value="30"></property>-->
+        <!--<property name="poolMaxTotal" value="50"></property>-->
+        <!--<property name="poolWaitMillis" value="500"></property>-->
+    <!--</bean>-->
+
+</beans>

@@ -1,0 +1,70 @@
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        var recipesId = $recipesId;
+        var recipesName = decodeURI("$recipesName");
+        $("#recipesName").text(recipesName);
+        $("#add").click(function () {
+            var title = $.trim($("input[name='title']").val());
+            var showIndex = $.trim($("input[name='showIndex']").val());
+            var description = $.trim($("input[name='description']").val());
+
+            var addData = {
+                "title": title,
+                "showIndex": showIndex,
+                "recipesId": recipesId,
+                "description": description
+            }
+            $.ajax({
+                type: "POST",
+                url: "/admin/step/add",
+                data: addData,
+                success: function (returnData) {
+                    if (returnData.status == 200) {
+                        $.messager.alert("添加成功", "添加成功");
+                        openTab("["+ recipesName + "]营养列表", "/admin/step/list?recipesId=" + recipesId + "&recipesName=" + encodeURI(encodeURI(recipesName)));
+                    } else {
+                        $.messager.alert(returnData.message, returnData.message)
+                    }
+                }
+            })
+        })
+    })
+    function goback() {
+        openTab("["+ recipesName + "]营养列表", "/admin/step/list?recipesId=" + recipesId + "&recipesName=" + encodeURI(encodeURI(recipesName)));
+    }
+</script>
+
+<div closable="true"  class="easyui-layout" fit="true" border="false">
+    <div data-options="region:'center',split:true" >
+        <form id="ff" method="post">
+            <table cellpadding="5">
+                <tr>
+                    <td>标题:</td>
+                    <td><input class="easyui-textbox" type="text" name="title" data-options="　"></input>
+                    </td>
+                </tr>
+                <tr>
+                    <td>展示顺序:</td>
+                    <td><input class="easyui-textbox" type="text" name="showIndex" data-options="　"></input>
+                    </td>
+                </tr>
+                <tr>
+                    <td>食谱名称:</td>
+                    <td id="recipesName"></input>
+                    </td>
+                </tr>
+                <tr>
+                    <td>描述:</td>
+                    <td><input class="easyui-textbox" type="text" name="description" data-options="　"></input>
+                    </td>
+                </tr>
+            </table>
+        </form>
+
+    </div>
+    <div data-options="region:'south'" style="height:70px;">
+        <a href="javascript:void(0)"  class="easyui-linkbutton" data-options="iconCls:'icon-add'" id="add">保存</a>
+        <a href="javascript:void(0)"  class="easyui-linkbutton" data-options="iconCls:'icon-back'" onclick="goback()">返回</a>
+    </div>
+</div>

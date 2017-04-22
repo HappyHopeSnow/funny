@@ -1,0 +1,68 @@
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#add").click(function () {
+            var title = $.trim($("input[name='title']").val());
+            var logo = $.trim($("input[name='pid']").val());
+            var description = $.trim($("input[name='description']").val());
+
+            var addData = {
+                "title": title,
+                "logo": logo,
+                "description": description
+            }
+            $.ajax({
+                type: "POST",
+                url: "/admin/recipes_type/add",
+                data: addData,
+                success: function (returnData) {
+                    if (returnData.status == 200) {
+                        $.messager.alert("添加成功", "添加成功");
+                        openTab("食谱分类列表", "/admin/recipes_type/list");
+                    } else {
+                        $.messager.alert(returnData.message, returnData.message)
+                    }
+                }
+            })
+        })
+    })
+    function goback() {
+        openTab("食谱分类列表", "/admin/recipes_type/list");
+    }
+</script>
+
+<div closable="true"  class="easyui-layout" fit="true" border="false">
+    <div data-options="region:'center',split:true" >
+        <!--图片上传-->
+        <form id="form1" action="imgUpload.json" method="post" enctype="multipart/form-data">
+            <input type="file" name="file">
+            <input type="button" value="提交" onclick="uploadImg()">
+        </form>
+
+        <form id="ff" method="post">
+            <table cellpadding="5">
+                <tr>
+                    <td>分类标题:</td>
+                    <td><input class="easyui-textbox" type="text" name="title" data-options="　"></input>
+                    </td>
+                </tr>
+                <tr>
+                    <td>logo:</td>
+                    <td style="text-align:left;">
+                        <img alt="" src="" id="imgUrl" width="100px">
+                        <input type="hidden" name="pid">
+                </tr>
+                <tr>
+                    <td>描述:</td>
+                    <td><input class="easyui-textbox" type="text" name="description" data-options="　"></input>
+                    </td>
+                </tr>
+            </table>
+        </form>
+
+    </div>
+    <div data-options="region:'south'" style="height:70px;">
+        <a href="javascript:void(0)"  class="easyui-linkbutton" data-options="iconCls:'icon-add'" id="add">保存</a>
+        <a href="javascript:void(0)"  class="easyui-linkbutton" data-options="iconCls:'icon-back'" onclick="goback()">返回</a>
+    </div>
+</div>

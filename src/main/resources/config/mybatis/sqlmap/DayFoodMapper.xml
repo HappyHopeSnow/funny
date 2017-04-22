@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.weishu.web.day_food.dao.DayFoodMapper" >
+  <resultMap id="BaseResultMap" type="com.weishu.web.day_food.entity.DayFood" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="day_index" property="dayIndex" jdbcType="INTEGER" />
+    <result column="title_date" property="titleDate" jdbcType="VARCHAR" />
+    <result column="title_week" property="titleWeek" jdbcType="VARCHAR" />
+    <result column="recipes_id_list" property="recipesIdList" jdbcType="VARCHAR" />
+    <result column="pids" property="pids" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="is_delete" property="isDelete" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, day_index, title_date, title_week, recipes_id_list, pids, create_time, update_time, 
+    is_delete
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.weishu.web.day_food.entity.DayFoodExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'false' as QUERYID,
+    <include refid="Base_Column_List" />
+    from day_food
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from day_food
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from day_food
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.weishu.web.day_food.entity.DayFoodExample" >
+    delete from day_food
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.weishu.web.day_food.entity.DayFood" useGeneratedKeys="true" keyProperty="id" >
+    insert into day_food (day_index, title_date, title_week, 
+      recipes_id_list, pids, create_time, 
+      update_time, is_delete)
+    values (#{dayIndex,jdbcType=INTEGER}, #{titleDate,jdbcType=VARCHAR}, #{titleWeek,jdbcType=VARCHAR}, 
+      #{recipesIdList,jdbcType=VARCHAR}, #{pids,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.weishu.web.day_food.entity.DayFood" useGeneratedKeys="true" keyProperty="id" >
+    insert into day_food
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="dayIndex != null" >
+        day_index,
+      </if>
+      <if test="titleDate != null" >
+        title_date,
+      </if>
+      <if test="titleWeek != null" >
+        title_week,
+      </if>
+      <if test="recipesIdList != null" >
+        recipes_id_list,
+      </if>
+      <if test="pids != null" >
+        pids,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="isDelete != null" >
+        is_delete,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="dayIndex != null" >
+        #{dayIndex,jdbcType=INTEGER},
+      </if>
+      <if test="titleDate != null" >
+        #{titleDate,jdbcType=VARCHAR},
+      </if>
+      <if test="titleWeek != null" >
+        #{titleWeek,jdbcType=VARCHAR},
+      </if>
+      <if test="recipesIdList != null" >
+        #{recipesIdList,jdbcType=VARCHAR},
+      </if>
+      <if test="pids != null" >
+        #{pids,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null" >
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update day_food
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.dayIndex != null" >
+        day_index = #{record.dayIndex,jdbcType=INTEGER},
+      </if>
+      <if test="record.titleDate != null" >
+        title_date = #{record.titleDate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.titleWeek != null" >
+        title_week = #{record.titleWeek,jdbcType=VARCHAR},
+      </if>
+      <if test="record.recipesIdList != null" >
+        recipes_id_list = #{record.recipesIdList,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pids != null" >
+        pids = #{record.pids,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.isDelete != null" >
+        is_delete = #{record.isDelete,jdbcType=TINYINT},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update day_food
+    set id = #{record.id,jdbcType=BIGINT},
+      day_index = #{record.dayIndex,jdbcType=INTEGER},
+      title_date = #{record.titleDate,jdbcType=VARCHAR},
+      title_week = #{record.titleWeek,jdbcType=VARCHAR},
+      recipes_id_list = #{record.recipesIdList,jdbcType=VARCHAR},
+      pids = #{record.pids,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      is_delete = #{record.isDelete,jdbcType=TINYINT}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.weishu.web.day_food.entity.DayFood" >
+    update day_food
+    <set >
+      <if test="dayIndex != null" >
+        day_index = #{dayIndex,jdbcType=INTEGER},
+      </if>
+      <if test="titleDate != null" >
+        title_date = #{titleDate,jdbcType=VARCHAR},
+      </if>
+      <if test="titleWeek != null" >
+        title_week = #{titleWeek,jdbcType=VARCHAR},
+      </if>
+      <if test="recipesIdList != null" >
+        recipes_id_list = #{recipesIdList,jdbcType=VARCHAR},
+      </if>
+      <if test="pids != null" >
+        pids = #{pids,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null" >
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.weishu.web.day_food.entity.DayFood" >
+    update day_food
+    set day_index = #{dayIndex,jdbcType=INTEGER},
+      title_date = #{titleDate,jdbcType=VARCHAR},
+      title_week = #{titleWeek,jdbcType=VARCHAR},
+      recipes_id_list = #{recipesIdList,jdbcType=VARCHAR},
+      pids = #{pids,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      is_delete = #{isDelete,jdbcType=TINYINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

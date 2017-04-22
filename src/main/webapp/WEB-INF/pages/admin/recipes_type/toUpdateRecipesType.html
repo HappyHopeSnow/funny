@@ -1,0 +1,74 @@
+<script type="text/javascript">
+    $(function () {
+        $("#updateAplcard").click(function () {
+            var id = $.trim($("input[name='id']").val());
+            var title = $.trim($("input[name='title']").val());
+            var logo = $.trim($("input[name='pid']").val());
+            var description = $.trim($("input[name='description']").val());
+
+
+            var addData = {
+                "id": id,
+                "title": title,
+                "logo": logo,
+                "description": description
+            }
+            $.ajax({
+                type: "POST",
+                url: "/admin/recipes_type/update",
+                data: addData,
+                success: function (returnData) {
+                    if (returnData.status == 200) {
+                        $.messager.alert("更新成功", "更新成功!");
+                        openTab("食谱分类列表", "/admin/recipes_type/list");
+                    } else {
+                        $.messager.alert(returnData.message, returnData.message)
+                    }
+                }
+            })
+        })
+    })
+    function goback() {
+        openTab("食谱分类列表", "/admin/recipes_type/list");
+    }
+</script>
+
+<div class="easyui-layout" fit="true" border="false">
+    <div data-options="region:'center',split:true" >
+        <!--图片上传-->
+        <form id="form1" action="imgUpload.json" method="post" enctype="multipart/form-data">
+            <input type="file" name="file">
+            <input type="button" value="提交" onclick="uploadImg()">
+        </form>
+
+        <form id="ff" method="post">
+            <input id="id" name="id" value="${recipesType.id}" type="hidden">
+            <table cellpadding="5">
+                    <td>分类标题:</td>
+                    <td><input class="easyui-textbox" type="text" id="title" name="title" value="${recipesType.title}"  data-options="　"></input>
+                    </td>
+                </tr>
+                <tr>
+                    <td>logo:</td>
+                    <td>
+                        <input type="hidden" name="pid">
+                        <img id="imgUrl" src="http://weishu-funny.oss-cn-shanghai.aliyuncs.com/img/${recipesType.logo}?x-oss-process=image/resize,m_lfit,h_100,w_100" width="100px"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>描述:</td>
+                    <td><input class="easyui-textbox" type="text" name="description" value="${recipesType.description}" data-options="　"></input>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <div data-options="region:'south'" style="height:70px;">
+        <a href="javascript:void(0)"  class="easyui-linkbutton" data-options="iconCls:'icon-add'" id="updateAplcard">更新</a>
+        <a href="javascript:void(0)"  class="easyui-linkbutton" data-options="iconCls:'icon-back'" onclick="goback()">返回</a>
+    </div>
+</div>
+
+
+
+

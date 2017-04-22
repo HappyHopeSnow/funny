@@ -1,0 +1,61 @@
+<div class="easyui-layout" fit="true" border="false">
+
+    <div data-options="region:'center'">
+        <form id="ff" method="post">
+            <table cellpadding="5">
+                <!-- #set(SysResource resource)-->
+                <input type="hidden" name="id" value="${resource.id}" />
+                <tr>
+                    <td>名称:</td>
+                    <td><input class="easyui-textbox" type="text" name="name" value="${resource.name}" data-options="required:true"></td>
+                </tr>
+                <tr>
+                    <td>类型:</td>
+                    <td>
+                        <select class="easyui-combobox" id="type" name="type" style="width: 100px">
+                            <option value="menu">menu</option>
+                            <option value="button">button</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>url:</td>
+                    <td><input class="easyui-textbox" type="text" name="url" value="${resource.url}"></td>
+                </tr>
+                <tr>
+                    <td>权限:</td>
+                    <td><input class="easyui-textbox" type="text" name="permission" value="${resource.permission}" data-options="required:true">
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <div style="text-align:center;padding:5px">
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()">提交</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">清除</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="back()">返回</a>
+        </div>
+    </div>
+</div>
+<script>
+    $(function() {
+        $('#type').val('${resource.type}');
+    })
+
+    function submitForm() {
+        $('#ff').form('submit', {
+            url: "/vm/resource/edit",
+            success: function (data) {
+                if(data.status = 200) {
+                    openTab('资源列表', "/vm/resource/tolist");
+                }
+            }
+        });
+    }
+    function clearForm() {
+        $('#ff').form('clear');
+    }
+    function back() {
+        openTab('用户列表', "/vm/resource/tolist");
+    }
+</script>
+
